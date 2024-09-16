@@ -27,7 +27,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = javaPkgs ++ [ pkgs.bash
                                       pkgs.pre-commit
-                                      pkgs.drill # TODO create drill config for crud test
+                                      pkgs.drill
                                       pkgs.astyle
                                       pkgs.unzip
                                       pkgs.curl ];

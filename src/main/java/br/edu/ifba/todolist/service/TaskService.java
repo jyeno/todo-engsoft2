@@ -34,19 +34,17 @@ public class TaskService {
         List<Task> tasks = repository.findAll();
         List<TaskDTO> result = new ArrayList<>();
 
-        tasks.stream()
-        .filter(task -> task.getStatus() == status)
-        .forEach(p -> result.add(mapper.toTaskDTO(p)));
+        tasks.stream().filter(task -> task.getStatus() == status).forEach(p -> result.add(mapper.toTaskDTO(p)));
 
         return result;
     }
 
-    public TaskDTO findById(Long id) {
+    public TaskDTO findById(Long id) throws TaskNotFoundException {
         Optional<Task> p = repository.findById(id);
         if (p.isPresent()) {
             return mapper.toTaskDTO(p.get());
         }
-        return null;
+        throw new TaskNotFoundException("Requested id: " + id);
     }
 
     public void remove(Long id) throws TaskNotFoundException {
@@ -57,14 +55,14 @@ public class TaskService {
     }
 
     public TaskDTO create(TaskDTO taskDTO) {
-        Task task = repository.save(mapper.toTask(taskDTO));
+        var task = repository.save(mapper.toTask(taskDTO));
         return mapper.toTaskDTO(task);
     }
 
-    public TaskDTO update(TaskDTO p) throws TaskNotFoundException {
-        if (!repository.existsById(p.getId())) {
-            throw new TaskNotFoundException("Requested id: " + p.getId());
+    public TaskDTO update(TaskDTO task) throws TaskNotFoundException {
+        if (!repository.existsById(task.getId())) {
+            throw new TaskNotFoundException("Requested id: " + task.getId());
         }
-        return create(p);
+        return create(task);
     }
 }

@@ -35,5 +35,8 @@ public class TaskDTO {
 
     private LocalDateTime updatedAt;
 
+    @NotNull
+    private LocalDateTime expiresAt;
+
     private String expiresIn;
 }

@@ -46,7 +46,6 @@ public class Task {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = createdAt;
-        expiresAt = createdAt.plusDays(7);
     }
 
     @PreUpdate

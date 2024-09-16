@@ -1,0 +1,90 @@
+base: 'http://localhost:9000'
+# concurrency: 4
+# iterations: 5
+# rampup: 2
+
+plan:
+  # getAll
+  - name: Fetch tasks
+    request:
+      url: /tasks
+
+  - name: Fetch Invalid task id
+    request:
+      url: /tasks/10000
+    assign: invalidTaskItem
+
+  - name: Assert request invalid task id
+    assert:
+      key: invalidTaskItem.status
+      value: 404
+
+  - name: Create taskItem
+    assign: taskItem
+    request:
+      url: /tasks
+      method: POST
+      headers:
+        Content-Type: 'application/json'
+      body: '{"title": "task 1","description": "description 1","status": "DONE", "expiresAt":"2024-09-23T08:44:50.558036"}'
+
+  - name: Fetch taskItem
+    request:
+      url: /tasks/{{ taskItem.body.id }}
+
+  - name: Assert taskItem request
+    assert:
+      key: taskItem.status
+      value: 200
+
+  - name: Update taskItem
+    request:
+      url: /tasks/{{ taskItem.body.id }}
+      method: PUT
+      headers:
+        Content-Type: 'application/json'
+      body: '{"id":1,"title":"first updated task","description":"updated description","status":"DOING","createdAt":"2024-09-16T00:09:22.96128","updatedAt":"2024-09-16T00:09:22.96128","expiresAt":"2024-09-23T08:44:50.558036"}'
+
+  - name: Update taskItem status
+    request:
+      url: /tasks/{{ taskItem.body.id }}/DONE
+      method: PUT
+      body: ''
+
+  - name: Delete taskItem
+    request:
+      method: DELETE
+      url: /tasks/{{ taskItem.body.id }}
+
+  - name: Delete invalid taskItem
+    request:
+      method: DELETE
+      url: /tasks/{{ taskItem.body.id }}
+
+  - name: POST some more tasks
+    request:
+      url: /tasks
+      method: POST
+      headers:
+        Content-Type: 'application/json'
+      body: '{{ item }}'
+    with_items:
+      - '{"title": "task 1","description": "description 1","status": "DONE", "expiresAt":"2024-09-23T08:44:50.558036"}'
+      - '{"title": "task 2","description": "description 2","status": "PENDING", "expiresAt":"2024-09-24T08:44:50.558036"}'
+      - '{"title": "task 3","description": "description 3","status": "DOING", "expiresAt":"2024-09-25T08:44:50.558036"}'
+      - '{"title": "task 4","description": "description 4","status": "PENDING", "expiresAt":"2024-09-22T08:44:50.558036"}'
+      - '{"title": "task 5","description": "description 5","status": "DONE", "expiresAt":"2024-09-20T08:44:50.558036"}'
+      - '{"title": "task 6","description": "description 6","status": "DOING", "expiresAt":"2024-09-21T08:44:50.558036"}'
+      - '{"title": "task 7","description": "description 7","status": "DONE", "expiresAt":"2024-09-28T08:44:50.558036"}'
+      - '{"title": "task 8","description": "description 8","status": "PENDING", "expiresAt":"2024-10-23T08:44:50.558036"}'
+      - '{"title": "task 9","description": "description 9","status": "DOING", "expiresAt":"2024-09-19T08:44:50.558036"}'
+      - '{"title": "task 10","description": "description 10","status": "PENDING", "expiresAt":"2024-09-20T10:44:50.558036"}'
+      - '{"title": "task 11","description": "description 11","status": "DONE", "expiresAt":"2024-09-16T18:44:50.558036"}'
+
+  - name: Fetch all tasks by status
+    request:
+      url: /tasks/status/{{ item }}
+    with_items:
+      - PENDING
+      - DOING
+      - DONE

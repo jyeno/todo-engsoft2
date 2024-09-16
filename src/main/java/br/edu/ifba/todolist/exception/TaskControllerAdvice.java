@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 import java.util.ArrayList;
 
-@ControllerAdvice("/tasks")
+@ControllerAdvice
 public class TaskControllerAdvice {
 
     @ExceptionHandler(value = {TaskNotFoundException.class})

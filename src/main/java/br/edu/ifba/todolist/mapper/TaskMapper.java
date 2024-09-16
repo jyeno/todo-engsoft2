@@ -20,7 +20,7 @@ public abstract class TaskMapper {
     public String getRemainingTimeString(LocalDateTime expirationTime) {
         var currentTime = LocalDateTime.now();
         var daysRemaining = currentTime.until(expirationTime, ChronoUnit.DAYS);
-        if (daysRemaining == 1) {
+        if (daysRemaining <= 1) {
             var hoursRemaining = currentTime.until(expirationTime, ChronoUnit.HOURS);
             return hoursRemaining + " hours";
         }

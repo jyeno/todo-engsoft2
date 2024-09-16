@@ -34,11 +34,7 @@ public class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getById(@PathVariable("id") Long id) {
         var taskDTO = service.findById(id);
-        if (taskDTO != null) {
-            return ResponseEntity.ok(taskDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(taskDTO);
     }
 
     @GetMapping("/status/{taskStatus}")
