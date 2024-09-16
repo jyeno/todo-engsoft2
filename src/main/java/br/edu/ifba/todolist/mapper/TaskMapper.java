@@ -22,8 +22,8 @@ public abstract class TaskMapper {
         var daysRemaining = currentTime.until(expirationTime, ChronoUnit.DAYS);
         if (daysRemaining == 1) {
             var hoursRemaining = currentTime.until(expirationTime, ChronoUnit.HOURS);
-            return hoursRemaining + "h";
+            return hoursRemaining + " hours";
         }
-        return daysRemaining + "d";
+        return daysRemaining + " days";
     }
 }

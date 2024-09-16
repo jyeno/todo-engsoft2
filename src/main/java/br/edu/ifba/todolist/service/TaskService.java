@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifba.todolist.dto.TaskDTO;
 import br.edu.ifba.todolist.entity.Task;
+import br.edu.ifba.todolist.entity.TaskStatus;
 import br.edu.ifba.todolist.mapper.TaskMapper;
 import br.edu.ifba.todolist.repository.TaskRepository;
 import br.edu.ifba.todolist.service.TaskService;
@@ -29,20 +30,23 @@ public class TaskService {
         return result;
     }
 
+    public List<TaskDTO> findAllByStatus(TaskStatus status) {
+        List<Task> tasks = repository.findAll();
+        List<TaskDTO> result = new ArrayList<>();
+
+        tasks.stream()
+        .filter(task -> task.getStatus() == status)
+        .forEach(p -> result.add(mapper.toTaskDTO(p)));
+
+        return result;
+    }
+
     public TaskDTO findById(Long id) {
         Optional<Task> p = repository.findById(id);
         if (p.isPresent()) {
             return mapper.toTaskDTO(p.get());
         }
         return null;
-    }
-
-    public List<TaskDTO> findByTitle(String title) {
-        List<Task> tasks = repository.findByTitle(title);
-        List<TaskDTO> result = new ArrayList<>();
-
-        tasks.forEach(p -> result.add(mapper.toTaskDTO(p)));
-        return result;
     }
 
     public void remove(Long id) throws TaskNotFoundException {
@@ -52,9 +56,9 @@ public class TaskService {
         repository.deleteById(id);
     }
 
-    public TaskDTO create(TaskDTO pessoaDTO) {
-        Task pessoa = repository.save(mapper.toTask(pessoaDTO));
-        return mapper.toTaskDTO(pessoa);
+    public TaskDTO create(TaskDTO taskDTO) {
+        Task task = repository.save(mapper.toTask(taskDTO));
+        return mapper.toTaskDTO(task);
     }
 
     public TaskDTO update(TaskDTO p) throws TaskNotFoundException {

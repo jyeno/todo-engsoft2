@@ -1,5 +1,7 @@
 package br.edu.ifba.todolist.dto;
 
+import br.edu.ifba.todolist.entity.TaskStatus;
+
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +18,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TaskDTO {
 
-    @NotNull
     private Long id;
 
     @NotEmpty
@@ -28,7 +29,11 @@ public class TaskDTO {
     private String description;
 
     @NotNull
+    private TaskStatus status;
+
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private String expiresIn;
 }

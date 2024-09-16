@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +31,26 @@ public class Task {
     private String description;
 
     @Column
+    private TaskStatus status;
+
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Column
+    private LocalDateTime updatedAt;
+
+    @Column
     private LocalDateTime expiresAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+        expiresAt = createdAt.plusDays(7);
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
