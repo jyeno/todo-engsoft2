@@ -28,7 +28,7 @@ public class TaskDTO {
     @Size(max = 500)
     private String description;
 
-    @NotNull
+    @NotNull(message = "Status must be PENDING, DOING or DONE")
     private TaskStatus status;
 
     private LocalDateTime createdAt;
