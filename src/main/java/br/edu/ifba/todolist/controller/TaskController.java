@@ -27,8 +27,9 @@ public class TaskController {
     private final TaskService service;
 
     @GetMapping
-    public List<TaskDTO> getAll() {
-        return service.findAll();
+    public ResponseEntity<List<TaskDTO>> getAll() {
+        var tasks = service.findAll();
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/{id}")
@@ -38,26 +39,30 @@ public class TaskController {
     }
 
     @GetMapping("/status/{taskStatus}")
-    public List<TaskDTO> getAll(@PathVariable("taskStatus") TaskStatus status) {
-        return service.findAllByStatus(status);
+    public ResponseEntity<List<TaskDTO>> getAll(@PathVariable("taskStatus") TaskStatus status) {
+        var tasks = service.findAllByStatus(status);
+        return ResponseEntity.ok(tasks);
     }
 
     @PostMapping
-    public TaskDTO create(@RequestBody @Valid TaskDTO taskDTO) {
-        return service.create(taskDTO);
+    public ResponseEntity<TaskDTO> create(@RequestBody @Valid TaskDTO taskDTO) {
+        var task = service.create(taskDTO);
+        return ResponseEntity.ok(task);
     }
 
     @PutMapping("/{id}")
-    public TaskDTO update(@PathVariable("id") Long id, @RequestBody @Valid TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> update(@PathVariable("id") Long id, @RequestBody @Valid TaskDTO taskDTO) {
         taskDTO.setId(id);
-        return service.update(taskDTO);
+        var task = service.update(taskDTO);
+        return ResponseEntity.ok(task);
     }
 
     @PutMapping("/{id}/{taskStatus}")
-    public TaskDTO update(@PathVariable("id") Long id, @PathVariable("taskStatus") TaskStatus status) {
+    public ResponseEntity<TaskDTO> update(@PathVariable("id") Long id, @PathVariable("taskStatus") TaskStatus status) {
         var taskDTO = service.findById(id);
         taskDTO.setStatus(status);
-        return service.update(taskDTO);
+        var task = service.update(taskDTO);
+        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/{id}")

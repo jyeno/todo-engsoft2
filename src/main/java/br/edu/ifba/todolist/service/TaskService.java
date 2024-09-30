@@ -31,10 +31,10 @@ public class TaskService {
     }
 
     public List<TaskDTO> findAllByStatus(TaskStatus status) {
-        List<Task> tasks = repository.findAll();
+        List<Task> tasks = repository.findAllByStatus(status);
         List<TaskDTO> result = new ArrayList<>();
 
-        tasks.stream().filter(task -> task.getStatus() == status).forEach(p -> result.add(mapper.toTaskDTO(p)));
+        tasks.forEach(p -> result.add(mapper.toTaskDTO(p)));
 
         return result;
     }
